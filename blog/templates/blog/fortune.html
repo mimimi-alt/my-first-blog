@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<script src="static/brython.js"></script>
+<script src="static/brython_stdlib.js"></script> 
+<title>荻野占い</title>
+
+
+</head>
+
+<body onload="brython()">
+<h3>荻野占い</h3>
+
+<form>
+    <select id="星座">
+        <option value="aries">おひつじ座</option>
+        <option value="taurus">おうし座</option>
+        <option value="gemini">ふたご座</option>
+        <option value="cancer">か座</option>
+        <option value="leo">しし座</option>
+        <option value="virgo">おとめ座</option>
+        <option value="libra">てんびん座</option>
+        <option value="scorpio">さそり座</option>
+        <option value="sagittarius">いて座</option>
+        <option value="capricorn">やぎ座</option>
+        <option value="aquarius">みずがめ座</option>
+        <option value="pisces">うお座</option>
+    </select>
+    <button id="execute" type="button" onclick="zod()">占う！</button>
+</form>
+<script>
+   
+    // select要素を取得
+    var element = document.getElementById( "星座" ) ;
+
+    // 選択状態の項目の値を取得
+    var a = element.value ;
+    // document.write(a);
+function zod(){
+    
+    x = document.getElementById("number");
+    x.innerHTML = a;
+}
+
+</script>
+
+<script type="text/python">
+    from urllib import request
+    from bs4 import BeautifulSoup
+    from browser import document
+    
+    
+    def fort():
+        #url
+    
+        apple = "aries"
+    
+        url = "https://fortune.yahoo.co.jp/12astro/" + str(apple)
+    
+        print(url)
+    
+        #get html
+        html = request.urlopen(url)
+    
+        #set BueatifulSoup
+        soup = BeautifulSoup(html, "html.parser")
+    
+        #総合運の点数を取得
+        mainNewsIndex = soup.find("div", attrs={"class", "yftn12a-tt02"})
+        fortunepoint = mainNewsIndex.find("p")
+    
+    
+        
+        fortuneclass = soup.find("div", attrs={"class", "yftn12a-md48"})
+        fortunetext = fortuneclass.find("dd")
+    
+        #print fortunepoint
+        # for headline in fortunepoint:
+        #     print(headline.contents[0], headline.span.string)
+        print("総合運：100点満点中" + fortunepoint.getText() + "！！！")
+        print(fortunetext.getText())
+    
+    if __name__ == "__main__":
+        fort()
+    
+    
+    execute_btn = document["execute"]
+    execute_btn.bind("click", fort)
+
+</script>
+
+<p id="number"></p>
+
+<textarea id="code"></textarea>
+
+</body>
+</html>
